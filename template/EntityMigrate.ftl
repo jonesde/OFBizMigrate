@@ -1,4 +1,9 @@
-<#-- Copyright 2011 by David E. Jones -->
+<#--
+Copyright 2011 Hemagenesis
+
+Unlike Moqui and Apache OFBiz this is not open source or in the public
+domain and may only be used under terms of a commercial license.
+-->
 
 <#assign typeMap = {
 "blob":"binary-very-long",
@@ -71,10 +76,78 @@
         <#recurse>
     </view-entity>
 </#macro>
+<#macro "member-entity">
+    <#assign viewLink = null>
+    <#list .node?parent["view-link"] as vl><#if vl["@rel-entity-alias"] == .node["@entity-alias"]>
+        <#assign viewLink = vl><#break>
+    </#if></#list>
+    <member-entity entity-alias="${.node["@entity-alias"]}" entity-name="${.node["@entity-name"]}"<#if viewLink?exists> join-from-alias="${viewLink["@entity-alias"]}"<#if viewLink["@rel-optional"]?if_exists == "true"> join-optional="true"</#if></#if>>
+        <#recurse>
+        <#if viewLink?exists><#list viewLink["key-map"] as keyMap>
+        <#visit keyMap>
+        </#list></#if>
+        <#if viewLink?exists><#list viewLink["entity-condition"] as entityCondition>
+        <#visit entityCondition>
+        </#list></#if>
+    </member-entity>
+</#macro>
 
-                <xs:element maxOccurs="unbounded" ref="member-entity"/>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="alias-all"/>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="alias"/>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="view-link"/>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="relation"/>
-                <xs:element minOccurs="0" ref="entity-condition"/>
+
+<#macro "alias-all">
+    <alias-all entity-alias="${.node["@entity-alias"]}"<#if .node["@prefix"]?has_content> prefix="${.node["@prefix"]}"</#if>>
+        <#recurse>
+    </alias-all>
+</#macro>
+<#macro "exclude">
+    <exclude field="${.node["@field"]}"/>
+</#macro>
+<#macro "alias">
+    <alias entity-alias="${.node["@entity-alias"]}" name="${.node["@name"]}"<#if .node["@field"]?has_content> field="${.node["@field"]}"</#if><#if .node["@function"]?has_content> function="${.node["@function"]}"</#if>>
+        <#recurse>
+    </alias>
+</#macro>
+<#macro "complex-alias">
+    <complex-alias>
+        <!-- TODO: support complex-alias -->
+        <#recurse>
+    </complex-alias>
+</#macro>
+
+<#macro "entity-condition">
+    <entity-condition>
+        <!-- TODO: support entity-condition
+        <xs:attribute name="filter-by-date" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                    <xs:enumeration value="by-name"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="distinct" default="false" type="boolean"/>
+        -->
+        <#recurse>
+    </entity-condition>
+</#macro>
+<#macro "condition-expr">
+    <econdition>
+        <!-- TODO: support condition-expr -->
+        <#recurse>
+    </econdition>
+</#macro>
+<#macro "condition-list">
+    <econditions>
+        <!-- TODO: support condition-list -->
+        <#recurse>
+    </econditions>
+</#macro>
+<#macro "having-condition-list">
+    <having-econditions>
+        <!-- TODO: support having-condition-list -->
+        <#recurse>
+    </having-econditions>
+</#macro>
+<#macro "order-by">
+    <order-by field-name="${.node["@field-name"]}"/>
+</#macro>
