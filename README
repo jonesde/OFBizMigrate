@@ -1,0 +1,8 @@
+
+OFBiz Artifact Migration
+
+- entity def -> entity def
+- service def -> service def
+- service impl in simple-method -> XML Actions
+- controller request/view, screen widget, form widget -> XML Screen,
+  with screen hierarchy based on menu widget

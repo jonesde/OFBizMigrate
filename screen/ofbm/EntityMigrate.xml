@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright 2011 Hemagenesis
+
+Unlike Moqui and Apache OFBiz this is not open source or in the public
+domain and may only be used under terms of a commercial license.
+-->
+<screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-1.0.xsd"
+        default-menu-title="Entity Migrate">
+    <transition name="migrateFile">
+        <actions><script><![CDATA[
+            import org.moqui.impl.FtlNodeWrapper
+            import org.moqui.context.ExecutionContext
+            import freemarker.core.Environment
+
+            ExecutionContext ec = context.ec
+
+            FtlNodeWrapper ftlNode = FtlNodeWrapper.makeFromText(ec.resource.getLocationText(ofbizEntityFilename, false))
+            Map root = ["entityXmlRoot": ftlNode]
+
+            String templateLocation = "component://OFBizMigrate/template/EntityMigrate.ftl"
+            freemarker.template.Template newTemplate = null
+            Reader templateReader = null
+            try {
+                templateReader = new InputStreamReader(ec.resource.getLocationStream(templateLocation))
+                newTemplate = new freemarker.template.Template(templateLocation, templateReader,
+                        ec.resource.ftlTemplateRenderer.getFtlConfiguration())
+            } catch (Exception e) {
+                ec.message.addError("Error while initializing XMLActions template at [${templateLocation}]: ${e.toString()}")
+            } finally {
+                if (templateReader) templateReader.close()
+            }
+
+            File outFile = new File(moquiEntityFilename)
+            if (!outFile.createNewFile()) {
+                ec.message.addError("File ${moquiEntityFilename} already exists.")
+                return
+            }
+
+            PrintWriter pw = new PrintWriter(outFile)
+            Environment env = newTemplate.createProcessingEnvironment(root, pw)
+            env.process()
+            pw.close()
+            ec.message.addMessage("Wrote migrated entities to file ${moquiEntityFilename}")
+
+            ]]></script></actions>
+        <default-response url="."/>
+    </transition>
+
+    <widgets>
+        <form-single name="SpecifyFile" transition="migrateFile">
+            <field name="ofbizEntityFilename"><default-field><text-line size="60"/></default-field></field>
+            <field name="moquiEntityFilename"><default-field><text-line size="60"/></default-field></field>
+            <field name="submit"><default-field title="Migrate"><submit/></default-field></field>
+        </form-single>
+    </widgets>
+</screen>
