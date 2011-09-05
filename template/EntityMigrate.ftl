@@ -25,7 +25,7 @@ domain and may only be used under terms of a commercial license.
 </entities>
 
 <#macro @element>
-    <!-- skipping element ${.node?node_name} -->
+    <!-- TODO: skipped element ${.node?node_name} -->
 </#macro>
 <#macro "entitymodel">
 <#recurse>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright 2011 Hemagenesis
+
+Unlike Moqui and Apache OFBiz this is not open source or in the public
+domain and may only be used under terms of a commercial license.
+-->
+<screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-1.0.xsd"
+        default-menu-title="Service Migrate">
+    <transition name="migrateDefFile">
+        <actions><script><![CDATA[
+            import org.moqui.impl.FtlNodeWrapper
+            import org.moqui.context.ExecutionContext
+            import freemarker.core.Environment
+
+            ExecutionContext ec = context.ec
+
+            FtlNodeWrapper ftlNode = FtlNodeWrapper.makeFromText(ec.resource.getLocationText(ofbizServiceDefFilename, false))
+            Map root = ["serviceXmlRoot": ftlNode]
+
+            String templateLocation = "component://OFBizMigrate/template/ServiceDefMigrate.ftl"
+            freemarker.template.Template newTemplate = null
+            Reader templateReader = null
+            try {
+                templateReader = new InputStreamReader(ec.resource.getLocationStream(templateLocation))
+                newTemplate = new freemarker.template.Template(templateLocation, templateReader,
+                        ec.resource.ftlTemplateRenderer.getFtlConfiguration())
+            } catch (Exception e) {
+                ec.message.addError("Error while initializing XMLActions template at [${templateLocation}]: ${e.toString()}")
+            } finally {
+                if (templateReader) templateReader.close()
+            }
+
+            File outFile = new File(moquiServiceDefFilename)
+            if (!outFile.createNewFile()) {
+                ec.message.addError("File ${moquiServiceDefFilename} already exists.")
+                return
+            }
+
+            PrintWriter pw = new PrintWriter(outFile)
+            Environment env = newTemplate.createProcessingEnvironment(root, pw)
+            env.process()
+            pw.close()
+            ec.message.addMessage("Wrote migrated service definitions to file ${moquiServiceDefFilename}")
+
+            ]]></script></actions>
+        <default-response url="."/>
+    </transition>
+    <transition name="migrateSmFile">
+        <actions><script><![CDATA[
+            import org.moqui.impl.FtlNodeWrapper
+            import org.moqui.context.ExecutionContext
+            import freemarker.core.Environment
+
+            ExecutionContext ec = context.ec
+
+            FtlNodeWrapper ftlNode = FtlNodeWrapper.makeFromText(ec.resource.getLocationText(ofbizSimpleMethodFilename, false))
+            Map root = ["smXmlRoot": ftlNode]
+
+            String templateLocation = "component://OFBizMigrate/template/SimpleMethodMigrate.ftl"
+            freemarker.template.Template newTemplate = null
+            Reader templateReader = null
+            try {
+                templateReader = new InputStreamReader(ec.resource.getLocationStream(templateLocation))
+                newTemplate = new freemarker.template.Template(templateLocation, templateReader,
+                        ec.resource.ftlTemplateRenderer.getFtlConfiguration())
+            } catch (Exception e) {
+                ec.message.addError("Error while initializing XMLActions template at [${templateLocation}]: ${e.toString()}")
+            } finally {
+                if (templateReader) templateReader.close()
+            }
+
+            File outFile = new File(moquiActionsFilename)
+            if (!outFile.createNewFile()) {
+                ec.message.addError("File ${moquiActionsFilename} already exists.")
+                return
+            }
+
+            PrintWriter pw = new PrintWriter(outFile)
+            Environment env = newTemplate.createProcessingEnvironment(root, pw)
+            env.process()
+            pw.close()
+            ec.message.addMessage("Wrote migrated simple-method to actions file ${moquiActionsFilename}")
+
+            ]]></script></actions>
+        <default-response url="."/>
+    </transition>
+
+    <widgets>
+        <form-single name="SpecifyDefFile" transition="migrateDefFile">
+            <field name="ofbizServiceDefFilename"><default-field><text-line size="60"/></default-field></field>
+            <field name="moquiServiceDefFilename"><default-field><text-line size="60"/></default-field></field>
+            <field name="submit"><default-field title="Migrate Definition"><submit/></default-field></field>
+        </form-single>
+        <form-single name="SpecifySmFile" transition="migrateSmFile">
+            <field name="ofbizSimpleMethodFilename"><default-field><text-line size="60"/></default-field></field>
+            <field name="moquiActionsFilename"><default-field><text-line size="60"/></default-field></field>
+            <field name="submit"><default-field title="Migrate Simple Method"><submit/></default-field></field>
+        </form-single>
+    </widgets>
+</screen>
