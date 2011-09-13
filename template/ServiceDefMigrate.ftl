@@ -52,6 +52,9 @@ domain and may only be used under terms of a commercial license.
             <#list .node["attribute"] as attr><#if attr["@mode"] == "IN" || attr["@mode"] == "INOUT">
             <parameter name="${attr["@name"]}" type="${attr["@type"]}" required="<#if !attr["@optional"]?exists || attr["@optional"] == "true">false<#else>true</#if>"<#if attr["@default-value"]?has_content> default-value="${attr["@default-value"]}"</#if><#if attr["@allow-html"]?has_content> allow-html="${attr["@allow-html"]}"</#if>/>
             </#if></#list>
+            <#list .node["override"] as attr><#if attr["@mode"] == "IN" || attr["@mode"] == "INOUT">
+            <parameter name="${attr["@name"]}"<#if attr["@type"]?has_content> type="${attr["@type"]}"</#if><#if attr["@optional"]?has_content> required="<#if !attr["@optional"]?exists || attr["@optional"] == "true">false<#else>true</#if>"</#if><#if attr["@default-value"]?has_content> default-value="${attr["@default-value"]}"</#if><#if attr["@allow-html"]?has_content> allow-html="${attr["@allow-html"]}"</#if>/>
+            </#if></#list>
         </in-parameters>
         <out-parameters>
             <#list .node["auto-attributes"] as aattrs><#if aattrs["@mode"] == "OUT" || aattrs["@mode"] == "INOUT">
@@ -64,6 +67,9 @@ domain and may only be used under terms of a commercial license.
             <#list .node["attribute"] as attr><#if attr["@mode"] == "OUT" || attr["@mode"] == "INOUT">
             <parameter name="${attr["@name"]}" type="${attr["@type"]}" required="<#if !attr["@optional"]?exists || attr["@optional"] == "true">false<#else>true</#if>"<#if attr["@default-value"]?has_content> default-value="${attr["@default-value"]}"</#if><#if attr["@allow-html"]?has_content> allow-html="${attr["@allow-html"]}"</#if>/>
             </#if></#list>
+            <#list .node["override"] as attr><#if attr["@mode"] == "IN" || attr["@mode"] == "INOUT">
+            <parameter name="${attr["@name"]}"<#if attr["@type"]?has_content> type="${attr["@type"]}"</#if><#if attr["@optional"]?has_content> required="<#if !attr["@optional"]?exists || attr["@optional"] == "true">false<#else>true</#if>"</#if><#if attr["@default-value"]?has_content> default-value="${attr["@default-value"]}"</#if><#if attr["@allow-html"]?has_content> allow-html="${attr["@allow-html"]}"</#if>/>
+            </#if></#list>
         </out-parameters>
     </service>
 </#macro>
@@ -72,4 +78,5 @@ domain and may only be used under terms of a commercial license.
     <implements service=".node["@service"]"<#if .node["@optional"]?if_exists == "true"> required="false"</#if>/>
 </#macro>
 <#macro "attribute"><#-- do nothing, this is called explicitly --></#macro>
+<#macro "override"><#-- do nothing, this is called explicitly --></#macro>
 <#macro "auto-attributes"><#-- do nothing, this is called explicitly --></#macro>
