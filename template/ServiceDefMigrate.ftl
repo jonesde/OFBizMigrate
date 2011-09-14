@@ -8,14 +8,13 @@ domain and may only be used under terms of a commercial license.
 "bsh":"script", "groovy":"script", "jacl":"script", "javascript":"script", "jpython":"script", "simple":"script",
 "entity-auto":"entity-auto", "interface":"interface", "java":"java"
 }/>
-
 <?xml version="1.0" encoding="UTF-8"?>
 <services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/service-definition-1.0.xsd">
 <#visit serviceXmlRoot/>
 </services>
 
 <#macro @element>
-    <!-- TODO: skipped element ${.node?node_name} -->
+    <!-- NOTE: skipped element ${.node?node_name} -->
 </#macro>
 <#macro "services">
 <#recurse>
