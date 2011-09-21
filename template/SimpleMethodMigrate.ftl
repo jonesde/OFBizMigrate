@@ -77,13 +77,13 @@ domain and may only be used under terms of a commercial license.
     <script>${.node["@list"]}.add(${.node["@field"]})</script>
 </#macro>
 <#macro "field-to-result">
-    <TODO/>
+    <set field="results.${.node["@result-name"]?default(.node["@field"])}" from="${.node["@field"]}"/>
 </#macro>
 <#macro "now-timestamp">
     <script>${.node["@field"]} = ec.user.nowTimestamp</script>
 </#macro>
 <#macro "calculate">
-    <TODO/>
+    <TODO(calculate)/>
 </#macro>
 
 <#macro "log">
@@ -91,27 +91,61 @@ domain and may only be used under terms of a commercial license.
 </#macro>
 
 <#macro "iterate">
-    <TODO/>
+    <iterate list="${.node["@list"]}" entry="${.node["@entry"]}"/>
+</#macro>
+<#macro "iterate-map">
+    <iterate list="${.node["@map"]}" entry="${.node["@value"]}" key="${.node["@key"]}"/>
 </#macro>
 <#macro "if">
-    <TODO/>
+    <if>
+        <!-- TODO sub-elements -->
+        <#recurse>
+    </if>
 </#macro>
+<#macro "else">
+    <else>
+        <#recurse>
+    </else>
+</#macro>
+<#macro "or">
+    <or>
+        <#recurse>
+    </or>
+</#macro>
+<#macro "and">
+    <and>
+        <#recurse>
+    </and>
+</#macro>
+<#macro "not">
+    <not>
+        <#recurse>
+    </not>
+</#macro>
+
 <#macro "if-empty">
-    <TODO/>
+    <if condition="!${.node["@field"]}">
+        <#recurse>
+    </if>
 </#macro>
 <#macro "if-compare">
-    <TODO/>
+    <compare field="${.node["@field"]}" operator="${.node["@operator"]}" value="${.node["@value"]}"<#if .node["@type"]?has_content> type="${.node["@type"]}"</#if><#if .node["@format"]?has_content> format="${.node["@format"]}"</#if>>
+        <#recurse>
+    </compare>
 </#macro>
 <#macro "if-compare-field">
-    <TODO/>
+    <compare field="${.node["@field"]}" operator="${.node["@operator"]}" to-field="${.node["@to-field"]}"<#if .node["@type"]?has_content> type="${.node["@type"]}"</#if><#if .node["@format"]?has_content> format="${.node["@format"]}"</#if>>
+        <#recurse>
+    </compare>
 </#macro>
 
 <#macro "add-error">
-    <TODO/>
+    <!-- TODO: handle fail-property sub-element -->
+    <message error="true"><#if .node["fail-message"]?has_content>${.node["fail-message"]["@message"]}</#if></message>
 </#macro>
 <#macro "check-errors">
-    <TODO/>
+    <check-errors/>
 </#macro>
 <#macro "return">
-    <TODO/>
+    <return<#if .node["@response-code"] == "error"> error="true"</#if>/>
 </#macro>

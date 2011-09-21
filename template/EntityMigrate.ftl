@@ -32,7 +32,7 @@ domain and may only be used under terms of a commercial license.
 </#macro>
 
 <#macro "description">
-    <description>${.node}</description>
+        <description>${.node}</description>
 </#macro>
 
 <#-- ========== entity and extend-entity ========== -->
@@ -66,12 +66,12 @@ domain and may only be used under terms of a commercial license.
 </#macro>
 
 <#macro "index">
-    <index name="${.node["@name"]}"<#if .node["@unique"]?has_content> unique="${.node["@unique"]}"</#if>>
-        <#recurse>
-    </index>
+        <index name="${.node["@name"]}"<#if .node["@unique"]?has_content> unique="${.node["@unique"]}"</#if>>
+            <#recurse>
+        </index>
 </#macro>
 <#macro "index-field">
-    <index-field name="${.node["@name"]}"/>
+            <index-field name="${.node["@name"]}"/>
 </#macro>
 
 <#-- ========== view-entity ========== -->

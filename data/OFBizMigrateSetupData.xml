@@ -6,7 +6,7 @@ Unlike Moqui and Apache OFBiz this is not open source or in the public
 domain and may only be used under terms of a commercial license.
 -->
 <entity-facade-xml type="seed">
-    <SubscreensItem screenLocation="component://webroot/screen/webroot/apps.xml"
+    <moqui.screen.SubscreensItem screenLocation="component://webroot/screen/webroot/apps.xml"
                     subscreenName="ofbm" userId="_NA_" subscreenLocation="component://OFBizMigrate/screen/ofbm.xml"
                     menuTitle="OFBiz Migrate" menuIndex="9" menuInclude="Y"/>
 </entity-facade-xml>
