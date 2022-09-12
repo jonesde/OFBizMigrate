@@ -7,6 +7,6 @@ domain and may only be used under terms of a commercial license.
 -->
 <entity-facade-xml type="seed">
     <moqui.screen.SubscreensItem screenLocation="component://webroot/screen/webroot/apps.xml"
-                    subscreenName="ofbm" userId="_NA_" subscreenLocation="component://OFBizMigrate/screen/ofbm.xml"
+                    subscreenName="ofbm" subscreenLocation="component://OFBizMigrate/screen/ofbm.xml"
                     menuTitle="OFBiz Migrate" menuIndex="9" menuInclude="Y"/>
 </entity-facade-xml>

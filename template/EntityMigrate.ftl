@@ -6,21 +6,23 @@ domain and may only be used under terms of a commercial license.
 -->
 <#assign typeMap = {
 "blob":"binary-very-long",
+"object":"binary-very-long",
+"byte-array": "binary-very-long",
 "date-time":"date-time", "date":"date", "time":"time",
 
 "currency-amount":"currency-amount", "currency-precise":"currency-precise",
 "fixed-point":"number-decimal", "floating-point":"number-float", "numeric":"number-integer",
 
-"id":"id", "id-long":"id-long", "id-vlong":"id-very-long",
+"id":"id", "id-long":"id-long", "id-vlong":"id-long",
 "indicator":"text-indicator", "very-short":"text-short", "short-varchar":"text-medium",
 "long-varchar":"text-long", "very-long":"text-very-long",
 
 "comment":"text-long", "description":"text-long", "name":"text-medium", "value":"text-long",
 "credit-card-number":"text-long", "credit-card-date":"text-short", "email":"text-long", "url":"text-long",
-"id-ne":"id", "id-long-ne":"id-long", "id-vlong-ne":"id-very-long", "tel-number":"text-medium"
+"id-ne":"id", "id-long-ne":"id-long", "id-vlong-ne":"id-long", "tel-number":"text-medium"
 }/>
 <?xml version="1.0" encoding="UTF-8"?>
-<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/entity-definition-1.0.xsd">
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/entity-definition-3.xsd">
 <#visit entityXmlRoot/>
 </entities>
 
@@ -38,7 +40,7 @@ domain and may only be used under terms of a commercial license.
 <#-- ========== entity and extend-entity ========== -->
 <#macro "entity">
     <#-- TODO: read from entitygroup.xml file(s) to find value (if applicable) for group-name attribute -->
-    <entity entity-name="${.node["@entity-name"]}" package-name="${.node["@package-name"]}"<#if .node["@table-name"]?has_content> table-name="${.node["@table-name"]}"</#if><#if .node["@sequence-bank-size"]?has_content> sequence-bank-size="${.node["@sequence-bank-size"]}"</#if><#if .node["@enable-lock"]?has_content> optimistic-lock="${.node["@enable-lock"]}"</#if><#if .node["@no-auto-stamp"]?has_content> no-update-stamp="${.node["@no-auto-stamp"]}"</#if><#if .node["@never-cache"]?if_exists == "true"> cache="never"</#if>>
+    <entity entity-name="${.node["@entity-name"]}" package="${.node["@package-name"]}"<#if .node["@table-name"]?has_content> table-name="${.node["@table-name"]}"</#if><#if .node["@sequence-bank-size"]?has_content> sequence-bank-size="${.node["@sequence-bank-size"]}"</#if><#if .node["@enable-lock"]?has_content> optimistic-lock="${.node["@enable-lock"]}"</#if><#if .node["@no-auto-stamp"]?has_content> no-update-stamp="${.node["@no-auto-stamp"]}"</#if><#if .node["@never-cache"]?if_exists == "true"> cache="never"</#if>>
         <#recurse>
     </entity>
 </#macro>
@@ -52,17 +54,19 @@ domain and may only be used under terms of a commercial license.
 <#macro "field">
     <#assign isPk = false>
     <#list .node?parent["prim-key"] as primKey><#if primKey["@field"] == .node["@name"]><#assign isPk = true></#if></#list>
-        <field name="${.node["@name"]}" type="${typeMap[.node["@type"]]}"<#if isPk> is-pk="true"</#if><#if .node["@col-name"]?has_content> column-name="${.node["@col-name"]}"</#if><#if .node["@encrypt"]?has_content> encrypt="${.node["@encrypt"]}"</#if><#if .node["@enable-audit-log"]?has_content> enable-audit-log="${.node["@enable-audit-log"]}"</#if>/>
+            <field name="${.node["@name"]}" type="${typeMap[.node["@type"]]}"<#if isPk> is-pk="true"</#if><#if .node["@col-name"]?has_content> column-name="${.node["@col-name"]}"</#if><#if .node["@encrypt"]?has_content> encrypt="${.node["@encrypt"]}"</#if><#if .node["@enable-audit-log"]?has_content> enable-audit-log="${.node["@enable-audit-log"]}"</#if>>
+            <#recurse>
+        </field>
 </#macro>
 <#macro "prim-key"><#-- ignore, is handled in the field macro --></#macro>
 
 <#macro "relation">
-        <relationship type="${.node["@type"]}"<#if .node["@fk-name"]?has_content> fk-name="${.node["@fk-name"]}"</#if><#if .node["@title"]?has_content> title="${.node["@title"]}"</#if> related-entity-name="${.node["@rel-entity-name"]}">
+        <relationship type="${.node["@type"]}"<#if .node["@fk-name"]?has_content> fk-name="${.node["@fk-name"]}"</#if><#if .node["@title"]?has_content> title="${.node["@title"]}"</#if> related="${.node["@rel-entity-name"]}">
         <#recurse>
         </relationship>
 </#macro>
 <#macro "key-map">
-            <key-map field-name="${.node["@field-name"]}"<#if .node["@rel-field-name"]?has_content> related-field-name="${.node["@rel-field-name"]}"</#if>/>
+            <key-map field-name="${.node["@field-name"]}"<#if .node["@rel-field-name"]?has_content> related="${.node["@rel-field-name"]}"</#if>/>
 </#macro>
 
 <#macro "index">
@@ -77,7 +81,7 @@ domain and may only be used under terms of a commercial license.
 <#-- ========== view-entity ========== -->
 
 <#macro "view-entity">
-    <view-entity entity-name="${.node["@entity-name"]}" package-name="${.node["@package-name"]}"<#if .node["@never-cache"]?if_exists == "true"> cache="never"</#if>>
+    <view-entity entity-name="${.node["@entity-name"]}" package="${.node["@package-name"]}"<#if .node["@never-cache"]?if_exists == "true"> cache="never"</#if>>
         <#recurse>
     </view-entity>
 </#macro>
