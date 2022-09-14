@@ -34,7 +34,7 @@ domain and may only be used under terms of a commercial license.
 </#macro>
 
 <#macro "description">
-        <description>${.node}</description>
+<#--        <description>${.node}</description>-->
 </#macro>
 
 <#-- ========== entity and extend-entity ========== -->
@@ -46,7 +46,9 @@ domain and may only be used under terms of a commercial license.
 </#macro>
 
 <#macro "extend-entity">
-    <extend-entity entity-name="${.node["@entity-name"]}">
+    <#local entityName = .node["@entity-name"] />
+    <#local packageName = packageMap.get(entityName)! />
+    <extend-entity entity-name="${.node["@entity-name"]}" package="${packageName!}">
         <#recurse>
     </extend-entity>
 </#macro>
@@ -61,7 +63,12 @@ domain and may only be used under terms of a commercial license.
 <#macro "prim-key"><#-- ignore, is handled in the field macro --></#macro>
 
 <#macro "relation">
-        <relationship type="${.node["@type"]}"<#if .node["@fk-name"]?has_content> fk-name="${.node["@fk-name"]}"</#if><#if .node["@title"]?has_content> title="${.node["@title"]}"</#if> related="${.node["@rel-entity-name"]}">
+        <#local relEntityName = .node["@rel-entity-name"] />
+        <#local packageName = packageMap.get(relEntityName)! />
+        <#if packageName?has_content>
+            <#local relEntityName = packageName + "." + relEntityName/>
+        </#if>
+        <relationship type="${.node["@type"]}"<#if .node["@fk-name"]?has_content> fk-name="${.node["@fk-name"]}"</#if><#if .node["@title"]?has_content> title="${.node["@title"]?cap_first}"</#if> related="${relEntityName}">
         <#recurse>
         </relationship>
 </#macro>
@@ -141,10 +148,10 @@ domain and may only be used under terms of a commercial license.
     </entity-condition>
 </#macro>
 <#macro "condition-expr">
-    <econdition>
+<#--    <econdition>-->
         <!-- TODO: support condition-expr -->
         <#recurse>
-    </econdition>
+<#--    </econdition>-->
 </#macro>
 <#macro "condition-list">
     <econditions>
