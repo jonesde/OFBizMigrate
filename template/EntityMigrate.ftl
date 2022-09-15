@@ -40,7 +40,7 @@ domain and may only be used under terms of a commercial license.
 <#-- ========== entity and extend-entity ========== -->
 <#macro "entity">
     <#-- TODO: read from entitygroup.xml file(s) to find value (if applicable) for group-name attribute -->
-    <entity entity-name="${.node["@entity-name"]}" package="${.node["@package-name"]}"<#if .node["@table-name"]?has_content> table-name="${.node["@table-name"]}"</#if><#if .node["@sequence-bank-size"]?has_content> sequence-bank-size="${.node["@sequence-bank-size"]}"</#if><#if .node["@enable-lock"]?has_content> optimistic-lock="${.node["@enable-lock"]}"</#if><#if .node["@no-auto-stamp"]?has_content> no-update-stamp="${.node["@no-auto-stamp"]}"</#if><#if .node["@never-cache"]?if_exists == "true"> cache="never"</#if> group="${groupName!}">
+    <entity entity-name="${.node["@entity-name"]}" package="${.node["@package-name"]}"<#if .node["@table-name"]?has_content> table-name="${.node["@table-name"]}"</#if><#if .node["@sequence-bank-size"]?has_content> sequence-bank-size="${.node["@sequence-bank-size"]}"</#if><#if .node["@enable-lock"]?has_content> optimistic-lock="${.node["@enable-lock"]}"</#if><#if .node["@no-auto-stamp"]?has_content> no-update-stamp="${.node["@no-auto-stamp"]}"</#if><#if .node["@never-cache"]?if_exists == "true"> cache="never"</#if> <#if groupName?has_content>group="${groupName}"</#if>>
         <#recurse>
     </entity>
 </#macro>
@@ -48,7 +48,7 @@ domain and may only be used under terms of a commercial license.
 <#macro "extend-entity">
     <#local entityName = .node["@entity-name"] />
     <#local packageName = packageMap.get(entityName)! />
-    <extend-entity entity-name="${.node["@entity-name"]}" package="${packageName!}" group="${groupName!}">
+    <extend-entity entity-name="${.node["@entity-name"]}" package="${packageName!}" <#if groupName?has_content>group="${groupName!}"</#if>
         <#recurse>
     </extend-entity>
 </#macro>
