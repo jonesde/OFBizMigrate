@@ -139,6 +139,7 @@ domain and may only be used under terms of a commercial license.
         </form-single>
         <form-single name="SpecifyOfbizRoot" transition="migrateOfbizFiles">
             <field name="ofbizRootLocation"><default-field><text-line size="60" default-value=""/></default-field></field>
+            <field name="groupName"><default-field><text-line size="60" default-value="ofbiz_transactional"/></default-field></field>
             <field name="moquiDirectory"><default-field><text-line size="60" default-value=""/></default-field></field>
             <field name="submit"><default-field title="Migrate"><submit/></default-field></field>
         </form-single>
