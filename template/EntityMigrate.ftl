@@ -11,7 +11,7 @@ domain and may only be used under terms of a commercial license.
 "date-time":"date-time", "date":"date", "time":"time",
 
 "currency-amount":"currency-amount", "currency-precise":"currency-precise",
-"fixed-point":"number-decimal", "floating-point":"number-float", "numeric":"number-integer",
+"fixed-point":"number-decimal", "floating-point":"number-float", "number-float":"number-float", "numeric":"number-integer",
 
 "id":"id", "id-long":"id-long", "id-vlong":"id-long",
 "indicator":"text-indicator", "very-short":"text-short", "short-varchar":"text-medium",
@@ -22,6 +22,25 @@ domain and may only be used under terms of a commercial license.
 "id-ne":"id", "id-long-ne":"id-long", "id-vlong-ne":"id-long", "tel-number":"text-medium"
 }/>
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
 <entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/entity-definition-3.xsd">
 <#visit entityXmlRoot/>
 </entities>
@@ -48,7 +67,7 @@ domain and may only be used under terms of a commercial license.
 <#macro "extend-entity">
     <#local entityName = .node["@entity-name"] />
     <#local packageName = packageMap.get(entityName)! />
-    <extend-entity entity-name="${.node["@entity-name"]}" package="${packageName!}" <#if groupName?has_content>group="${groupName!}"</#if>
+    <extend-entity entity-name="${.node["@entity-name"]}" package="${packageName!}" <#if groupName?has_content>group="${groupName!}"</#if>>
         <#recurse>
     </extend-entity>
 </#macro>
