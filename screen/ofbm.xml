@@ -5,7 +5,7 @@ Copyright 2011 Hemagenesis
 Unlike Moqui and Apache OFBiz this is not open source or in the public
 domain and may only be used under terms of a commercial license.
 -->
-<screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-1.0.xsd">
+<screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.0.xsd">
     <subscreens default-item="EntityMigrate">
     </subscreens>
     <widgets>
